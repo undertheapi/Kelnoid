@@ -1,0 +1,1 @@
+g++ sample.cxx -o test.exe -lSDL2main -lSDL2 -mwindows
