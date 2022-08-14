@@ -13,15 +13,17 @@ using namespace std;
 
 #include "error_handler.hxx"
 
-void ERROR_HANDLER::init() {
+Error_Message topOfStack*;
+
+void KEL_ERROR_HANDLER::init() {
 	topOfStack = NULL;
 }
 
-void ERROR_HANDLER::kill() {
+void KEL_ERROR_HANDLER::kill() {
 	delete topOfStack;
 }
 
-void ERROR_HANDLER::push(short _type, string _title, string _message) {
+void KEL_ERROR_HANDLER::push(short _type, string _title, string _message) {
 	Error_Message newMessage* = new Error_Message(_type, _title, _message);
 	
 	if (topOfStack == NULL) {
@@ -34,11 +36,11 @@ void ERROR_HANDLER::push(short _type, string _title, string _message) {
 	
 	switch (_type) {
 		case KELNOID_ERROR_WARNING:
-			ERROR_HANDLER::dump();
+			KEL_ERROR_HANDLER::dump();
 			break
 		case KELNOID_ERROR_FATAL:
-			ERROR_HANDLER::dump();
-			ERROR_HANDLER::kill();
+			KEL_ERROR_HANDLER::dump();
+			KEL_ERROR_HANDLER::kill();
 			break;
 		case KELNOID_ERROR_DEBUG:
 			// print just the message! 
@@ -47,7 +49,7 @@ void ERROR_HANDLER::push(short _type, string _title, string _message) {
 	}
 }
 
-void ERROR_HANDLER::dump() {
+void KEL_ERROR_HANDLER::dump() {
 	Error_Message* message = topOfStack;
 	
 	if (message == NULL) {

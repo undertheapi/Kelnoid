@@ -20,9 +20,7 @@ struct Error_Message {
 	Error_Message* nextNode;
 };
 
-Error_Message topOfStack*;
-
-namespace ERROR_HANDLER {
+namespace KEL_ERROR_HANDLER {
 	/*
 		This will make sure the Error Stack starts Empty.
 	*/
