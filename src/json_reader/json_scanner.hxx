@@ -18,10 +18,15 @@
 #define KEL_TOKEN_RIGHT_BRACKET 0x06
 #define KEL_TOKEN_COMMA 0x07
 #define KEL_TOKEN_COLON 0x08
+#define KEL_TOKEN_TRUE 0x09
+#define KEL_TOKEN_FALSE 0x0a
+#define KEL_TOKEN_NULL 0x0b
+#define KEL_TOKEN_END_OF_FILE 0xff
 
 struct KEL_JSON_TOKEN {
 	char type;
-	int value;
+	int intValue;
+	string strValue;
 };
 
 namespace KEL_JSON_SCANNER {
