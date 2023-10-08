@@ -9,9 +9,10 @@
 	The error messages here are stored as a Stack.
 */
 
-#define KELNOID_ERROR_WARNING 0x00
-#define KELNOID_ERROR_FATAL   0x10
-#define KELNOID_ERROR_DEBUG   0x20
+#define KELNOID_ERROR_WARNING	0x00
+#define KELNOID_ERROR_FATAL		0x10
+#define KELNOID__DEBUG			0x20
+#define KELNOID_SDL_ERROR		0x30
 
 struct Error_Message {
 	short errorType;
@@ -23,12 +24,14 @@ struct Error_Message {
 namespace KEL_ERROR_HANDLER {
 	/*
 		This will make sure the Error Stack starts Empty.
+		Call this up on the startup of the program.
 	*/
 	void init();
 	
 	/*
 		Should be called at the end of the Program OR when the Stack
-		needs to be killed off. 
+		needs to be killed off.
+		This is also called up when the programming has had a fatal error.
 	*/
 	void kill();
 	

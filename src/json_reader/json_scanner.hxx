@@ -5,7 +5,7 @@
 	
 	This is the Header File for the JSON Scanner.
 	
-	WARNING :: This JSON Scanner cann't handle FLOATS!
+	WARNING :: This JSON Scanner can't handle FLOATS!
 	There isn't anypoint so far with KELNOID.
 */
 
@@ -27,6 +27,7 @@ struct KEL_JSON_TOKEN {
 	char type;
 	int intValue;
 	string strValue;
+	int lineNumber; // The Line Number is purely for error Handling.
 };
 
 namespace KEL_JSON_SCANNER {
@@ -35,6 +36,8 @@ namespace KEL_JSON_SCANNER {
 		If the file doesn't exist, this method will return a false.
 	*/
 	bool init(string);
+	
+	void step();
 	
 	KEL_JSON_TOKEN getNextToken();
 }

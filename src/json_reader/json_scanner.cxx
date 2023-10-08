@@ -22,6 +22,8 @@ char* memblock;
 int memoryIndex;
 int lineCounter;
 
+KEL_JSON_TOKEN currentToken;
+
 /*
 	Yes, I cheated and got some of the code here:
 	https://cplusplus.com/doc/tutorial/files/
@@ -41,12 +43,12 @@ bool KEL_JSON_SCANNER::init(string _fileName) {
 		file.read(memblock, size);
 		file.close();
 	} else {
-		KEL_ERROR_HANDLER::push(KELNOID_ERROR_WARNING, "KEL_JSON_SCANNER", "The JSON file given does not exist.");
+		KEL_ERROR_HANDLER::push(KELNOID_ERROR_WARNING, "KEL_JSON_SCANNER", "The JSON file given does not exist. File Name :: " + _fileName);
 		return false;
 	}
 }
 
-KEL_JSON_TOKEN KEL_JSON_SCANNER::getNextToken() {
+void KEL_JSON_SCANNER::step() {
 	if (size != memoryIndex + 1) {
 		/*
 			This part wipes out the whitespace.
@@ -102,16 +104,47 @@ KEL_JSON_TOKEN KEL_JSON_SCANNER::getNextToken() {
 						KEL_ERROR_HANDLER::push(KELNOID_ERROR_WARNING, "KEL_JSON_SCANNER", "Strings can only be declared on one line.");
 						retToken.type = KEL_TOKEN_ERROR;
 						delete memblock;
-						return retToken;
+						break;
 					} else {
 						KEL_ERROR_HANDLER::push(KELNOID_ERROR_WARNING, "KEL_JSON_SCANNER", "There is an Invalid Character within a JSON String.");
 						retToken.type = KEL_TOKEN_ERROR;
 						delete memblock;
-						return retToken;
+						break;
 					}
 				}
 				++memoryIndex;
+				retToken.type = KEL_TOKEN_STRING;
+				retToken.strValue = acculator;
 				
+			default:
+		}
+		
+		currentToken = retToken;
+		return 0;
+		
+		/*
+			Handling Numbers here:
+		*/
+		if (memblock[memoryIndex] >= 0x30 && memblock[memoryIndex] <= 0x39) {
+			string accumulator = "";
+			while (memblock[memoryIndex] >= 0x30 && memblock[memoryIndex] <= 0x39) {
+				accumulator += memblock[memoryIndex];
+				++memoryIndex;
+			}
+			
+			int acc = 0;
+			int index = accululator.size() - 1;
+			int base = 1;
+			while (index >= 0) {
+				acc += (accumulator[index] - 0x30) * base;
+				--index;
+				base *= 10;
+			}
+			
+			retToken.type = KEL_TOKEN_NUMBER;
+			retToken.strValue = acc;
+			
+			currentToken = retToken;
 		}
 	} else {
 		KEL_JSON_TOKEN eofToken;
@@ -119,6 +152,10 @@ KEL_JSON_TOKEN KEL_JSON_SCANNER::getNextToken() {
 		
 		delete memblock;
 		
-		return eofToken;
+		currentToken = eofToken;
 	}
+}
+
+KEL_JSON_TOKEN KEL_JSON_SCANNER::getNextToken() {
+	return currentToken;
 }
